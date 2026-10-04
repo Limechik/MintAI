@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	Без явных entitlements ldid -S подписывает бинарь вообще без
+	application-identifier / keychain-access-groups. Security.framework
+	сверяет эти значения на каждый SecItemAdd/SecItemCopyMatching, и без
+	них Keychain-записи (API-ключи в MAKeychain) не гарантированно
+	переживают перезапуск процесса — новый запуск не может однозначно
+	доказать, что он "тот же" владелец записи. Фиксируем identifier явно,
+	привязав его к собственному bundle id из control/Info.plist.
+	-->
+	<key>application-identifier</key>
+	<string>com.mintai.app</string>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>com.mintai.app</string>
+	</array>
+</dict>
+</plist>

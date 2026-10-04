@@ -1,0 +1,9 @@
+Package: com.lime.mintai
+Name: MintAI
+Version: 0.1.0
+Architecture: iphoneos-arm
+Description: Универсальный ИИ-клиент
+Maintainer: lime
+Author: lime
+Section: Applications
+Depends: firmware (>= 6.0)
