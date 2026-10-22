@@ -6,6 +6,7 @@
 #import "MAMistralProvider.h"
 #import "MAGeminiProvider.h"
 #import "MAOpenCodeZenProvider.h"
+#import "MALocalProvider.h"
 #import "MACustomProvider.h"
 #import "MAKeychain.h"
 
@@ -33,6 +34,7 @@ static NSString *const kActiveProviderDefaultsKey = @"MAActiveProviderIdentifier
 			[[MAMistralProvider alloc] init],
 			[[MAGeminiProvider alloc] init],
 			[[MAOpenCodeZenProvider alloc] init],
+			[[MALocalProvider alloc] init],
 			[[MACustomProvider alloc] init],
 		];
 

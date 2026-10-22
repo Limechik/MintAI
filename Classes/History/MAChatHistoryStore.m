@@ -1,8 +1,12 @@
 #import "MAChatHistoryStore.h"
 #import "MAChatSession.h"
+#import "MAVault.h"
 
 @interface MAChatHistoryStore ()
 @property (nonatomic, strong) NSMutableArray *mutableSessions; // MAChatSession*
+// NO, пока на диске лежит зашифрованная история, которую сейчас нечем прочитать
+// (хранилище закрыто). Запись в таком состоянии затёрла бы её пустым списком.
+@property (nonatomic, assign) BOOL canPersist;
 @end
 
 @implementation MAChatHistoryStore
@@ -19,8 +23,12 @@
 - (instancetype)init {
 	self = [super init];
 	if (self) {
-		_mutableSessions = [[self loadFromDisk] mutableCopy] ?: [NSMutableArray array];
+		_canPersist = YES;
+		BOOL needsMigration = NO;
+		_mutableSessions = [[self loadFromDiskNeedsMigration:&needsMigration] mutableCopy] ?: [NSMutableArray array];
 		[self sortSessions];
+		// История от старой версии лежала открытым текстом: пересохраняем уже зашифрованной.
+		if (needsMigration) [self persistToDisk];
 	}
 	return self;
 }
@@ -67,13 +75,37 @@
 	return [documentsDir stringByAppendingPathComponent:@"ChatHistory.archive"];
 }
 
-- (NSArray *)loadFromDisk {
+- (NSArray *)loadFromDiskNeedsMigration:(BOOL *)needsMigration {
 	NSString *path = [self archivePath];
 	if (![[NSFileManager defaultManager] fileExistsAtPath:path]) return nil;
+
+	MAVault *vault = [MAVault sharedVault];
 
 	@try {
 		NSData *data = [NSData dataWithContentsOfFile:path];
 		if (!data) return nil;
+
+		if ([MAVault dataIsEncrypted:data]) {
+			if (!vault.unlocked && !vault.unavailable) {
+				// Хранилище закрыто (ждёт PIN): историю не трогаем и не перезаписываем.
+				self.canPersist = NO;
+				return nil;
+			}
+			NSData *plain = [vault decryptData:data];
+			if (!plain) {
+				// Ключ утерян (например, резервную копию восстановили на другое
+				// устройство) или файл повреждён. Откладываем его в сторону, а не
+				// затираем, и начинаем с пустой истории.
+				NSString *asidePath = [path stringByAppendingString:@".unreadable"];
+				[[NSFileManager defaultManager] removeItemAtPath:asidePath error:nil];
+				[[NSFileManager defaultManager] moveItemAtPath:path toPath:asidePath error:nil];
+				return nil;
+			}
+			data = plain;
+		} else if (needsMigration) {
+			*needsMigration = vault.unlocked; // открытый текст от старой версии
+		}
+
 		id decoded = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 		if ([decoded isKindOfClass:[NSArray class]]) {
 			return decoded;
@@ -87,8 +119,20 @@
 }
 
 - (void)persistToDisk {
-	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.sessions];
-	[data writeToFile:[self archivePath] atomically:YES];
+	if (!self.canPersist) return;
+
+	NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:self.sessions];
+	MAVault *vault = [MAVault sharedVault];
+
+	NSData *data = [vault encryptData:archive];
+	if (!data) {
+		if (!vault.unavailable) {
+			NSLog(@"[MAChatHistoryStore] хранилище закрыто — историю не записываем");
+			return;
+		}
+		data = archive; // шифрование недоступно: пишем как раньше, чтобы история не пропала
+	}
+	[data writeToFile:[self archivePath] options:NSDataWritingAtomic error:nil];
 }
 
 @end

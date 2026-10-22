@@ -33,6 +33,10 @@ MintAI_FILES = \
 	Classes/Settings/MAAppearanceSettingsViewController.m \
 	Classes/Settings/MALanguageSettingsViewController.m \
 	Classes/Settings/MAInstructionsStore.m \
+	Classes/Settings/MAPrivacySettings.m \
+	Classes/Crypto/MAVault.m \
+	Classes/Lock/MAAppLock.m \
+	Classes/Lock/MAPINViewController.m \
 	Classes/Settings/MAInstructionsViewController.m \
 	Classes/History/MAChatSession.m \
 	Classes/History/MAChatHistoryStore.m \
@@ -47,6 +51,7 @@ MintAI_FILES = \
 	Classes/Providers/MAMistralProvider.m \
 	Classes/Providers/MAGeminiProvider.m \
 	Classes/Providers/MAOpenCodeZenProvider.m \
+	Classes/Providers/MALocalProvider.m \
 	Classes/Providers/MACustomProvider.m \
 	Classes/Providers/MAClaudeProvider.m \
 	Classes/Providers/MAProviderRegistry.m \
@@ -57,6 +62,7 @@ MintAI_FILES = \
 	Classes/Providers/MAImageProviderRegistry.m \
 	Classes/Providers/MAKeychain.m \
 	Classes/Settings/MAProviderDetailViewController.m \
+	Classes/Settings/MAModelPickerViewController.m \
 	Classes/Voice/MAVoiceProvider.m \
 	Classes/Voice/MAVoiceService.m \
 	Classes/Voice/Vox/MAVoxCore.c \
@@ -79,12 +85,19 @@ MintAI_CFLAGS = -fobjc-arc -Wall \
 	-IClasses/Chat \
 	-IClasses/Settings \
 	-IClasses/History \
+	-IClasses/Crypto \
+	-IClasses/Lock \
 	-IClasses/Providers \
 	-IClasses/Voice \
 	-IClasses/Voice/Vox \
 	-IClasses/Voice/Stt \
 	-fwrapv
 MintAI_FRAMEWORKS = UIKit Foundation CoreGraphics Security QuartzCore AVFoundation
+# Тулчейн clang 10 (Linux) генерирует вызовы __cxa_guard_* для статических
+# локальных переменных, а стандартную библиотеку C++ в чистый ObjC-проект сам не
+# подключает. Без этого линковка падает с "Undefined symbols ___cxa_guard_acquire".
+# Если SDK не находит libstdc++, замени на -lc++.
+MintAI_LDFLAGS = -lstdc++
 
 include $(THEOS_MAKE_PATH)/application.mk
 

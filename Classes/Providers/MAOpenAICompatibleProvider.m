@@ -95,6 +95,7 @@
 
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	request.HTTPMethod = @"POST";
+	if (self.requestTimeout > 0) request.timeoutInterval = self.requestTimeout;
 	request.HTTPBody = bodyData;
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	if (self.apiKey.length > 0) {

@@ -20,6 +20,10 @@
 // HTTP-Referer / X-Title.
 @property (nonatomic, copy) NSDictionary *extraHeaders;
 
+// Таймаут запроса в секундах. 0 — системный по умолчанию (60 с). Для локальных моделей,
+// которые отвечают минутами, его увеличивают (см. MALocalProvider).
+@property (nonatomic, assign) NSTimeInterval requestTimeout;
+
 - (instancetype)initWithIdentifier:(NSString *)identifier
                         displayName:(NSString *)displayName
                       baseURLString:(NSString *)baseURLString

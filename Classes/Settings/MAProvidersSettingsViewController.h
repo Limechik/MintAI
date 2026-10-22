@@ -2,7 +2,7 @@
 #import "MAThemedTableViewController.h"
 
 typedef NS_ENUM(NSInteger, MAProvidersKind) {
-	MAProvidersKindChat = 0,  // DeepSeek, OpenAI, Claude, OpenRouter, Mistral, Gemini, OpenCode Zen, Custom
+	MAProvidersKindChat = 0,  // DeepSeek, OpenAI, Claude, OpenRouter, Mistral, Gemini, OpenCode Zen, Local LLM, Custom
 	MAProvidersKindImage = 1, // OpenAI (DALL·E), OpenRouter, Custom
 };
 

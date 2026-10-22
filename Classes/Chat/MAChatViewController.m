@@ -11,6 +11,7 @@
 #import "MAMessage.h"
 #import "MAChatSession.h"
 #import "MAChatHistoryStore.h"
+#import "MAPrivacySettings.h"
 #import "MAWallpaperStore.h"
 #import "MAVoiceService.h"
 #import "MAInstructionsStore.h"
@@ -49,7 +50,10 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 // Сессия истории, в которую пишется текущая переписка. nil, пока не
 // отправлено первое сообщение — создаётся лениво в -persistCurrentSession.
 @property (nonatomic, strong) MAChatSession *currentSession;
-// YES, если экран открыт из MAChatHistoryViewController (тогда это не корень
+// YES, если эта переписка шла (хотя бы частично) в режиме инкогнито: она не
+// пишется в историю до «Нового чата», даже если режим уже выключили.
+@property (nonatomic, assign) BOOL incognitoConversation;
+// YES, если экран экран открыт из MAChatHistoryViewController (тогда это не корень
 // вкладки "Chat", у него уже есть системная кнопка "Назад", а "Новый чат"
 // не нужен).
 @property (nonatomic, assign) BOOL openedFromHistory;
@@ -155,6 +159,10 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	                                          selector:@selector(themeDidChange:)
 	                                              name:MAThemeDidChangeNotification
+	                                            object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	                                          selector:@selector(incognitoDidChange:)
+	                                              name:MAIncognitoDidChangeNotification
 	                                            object:nil];
 }
 
@@ -513,6 +521,17 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 	[self.tableView reloadData];
 }
 
+// Режим инкогнито переключили, пока чат открыт. Если в ленте уже есть
+// переписка, она с этого момента больше не обновляется в истории (то, что
+// успело сохраниться до переключения, остаётся как было).
+- (void)incognitoDidChange:(NSNotification *)notification {
+	if ([MAPrivacySettings sharedSettings].incognito && self.items.count > 0) {
+		self.incognitoConversation = YES;
+		self.currentSession = nil;
+	}
+	[self updateTitleWithActiveProvider]; // значок в заголовке и текст пустого чата
+}
+
 // Язык интерфейса сменили, пока чат открыт: обновляем подписи, не трогая переписку.
 - (void)languageDidChange:(NSNotification *)notification {
 	self.navigationItem.rightBarButtonItem.title = MALocalizedString(@"Провайдер");
@@ -576,6 +595,7 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 - (void)persistCurrentSession {
 	NSArray *providerMessages = [self providerMessages];
 	if (providerMessages.count == 0) return;
+	if ([self shouldSkipPersisting]) return;
 
 	if (!self.currentSession) {
 		self.currentSession = [[MAChatSession alloc] init];
@@ -585,6 +605,22 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 	self.currentSession.title = [self titleFromProviderMessages:providerMessages];
 
 	[[MAChatHistoryStore sharedStore] saveSession:self.currentSession];
+}
+
+// YES, если эту переписку нельзя писать в историю: включён режим инкогнито
+// или беседа уже шла в нём. Попутно запоминает, что беседа «инкогнито», чтобы
+// после выключения режима она не попала в историю вместе со всем, что в ней было.
+- (BOOL)shouldSkipPersisting {
+	if ([MAPrivacySettings sharedSettings].incognito) {
+		if (self.items.count > 0) self.incognitoConversation = YES;
+		return YES;
+	}
+	return self.incognitoConversation;
+}
+
+// Беседа идёт «не для записи»: для значка в заголовке.
+- (BOOL)isIncognitoNow {
+	return [MAPrivacySettings sharedSettings].incognito || self.incognitoConversation;
 }
 
 - (NSString *)titleFromProviderMessages:(NSArray *)messages {
@@ -615,8 +651,9 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 	                 animations:^{
 		self.items = [NSMutableArray array];
 		self.currentSession = nil;
+		self.incognitoConversation = NO; // чистый лист: дальше решает сам переключатель
 		self.pendingImage = nil;
-		[self updateEmptyState];
+		[self updateTitleWithActiveProvider]; // заодно обновит пустое состояние
 		[self.tableView reloadData];
 	}
 	                 completion:nil];
@@ -665,11 +702,14 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 
 	if (self.items.count == 0) {
 		// Удалили вообще всё — хранить в истории пустую сессию незачем,
-		// убираем её целиком, как будто беседы и не было.
-		if (self.currentSession) {
+		// убираем её целиком, как будто беседы и не было. В инкогнито историю
+		// не трогаем: сохранённая беседа, открытая из истории, остаётся на месте.
+		if (self.currentSession && ![self shouldSkipPersisting]) {
 			[[MAChatHistoryStore sharedStore] deleteSession:self.currentSession];
-			self.currentSession = nil;
 		}
+		self.currentSession = nil;
+		self.incognitoConversation = NO;
+		[self updateTitleWithActiveProvider];
 	} else {
 		[self persistCurrentSession];
 	}
@@ -807,7 +847,8 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 
 - (void)updateTitleWithActiveProvider {
 	id<MAProvider> provider = [MAProviderRegistry sharedRegistry].activeProvider;
-	self.title = provider ? [NSString stringWithFormat:@"MintAI — %@", provider.displayName] : @"MintAI";
+	NSString *title = provider ? [NSString stringWithFormat:@"MintAI — %@", provider.displayName] : @"MintAI";
+	self.title = [self isIncognitoNow] ? [@"🕶 " stringByAppendingString:title] : title;
 	[self updateEmptyState];
 }
 
@@ -822,7 +863,11 @@ static const CGFloat kAttachmentBarHeight = 60.0;
 	} else {
 		self.emptyStateLabel.text = MALocalizedString(@"Привет!\nНапиши сообщение.");
 	}
+	if ([self isIncognitoNow]) {
+		self.emptyStateLabel.text = [self.emptyStateLabel.text stringByAppendingFormat:@"\n\n🕶 %@", MALocalizedString(@"Режим инкогнито: беседа не сохраняется")];
+	}
 	self.emptyStateLabel.hidden = (self.items.count > 0);
+	[self.view setNeedsLayout]; // высота текста могла измениться (строка про инкогнито)
 }
 
 - (void)showProviderPicker {

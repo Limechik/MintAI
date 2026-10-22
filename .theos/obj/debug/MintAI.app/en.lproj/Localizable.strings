@@ -1,0 +1,131 @@
+/* MintAI — English strings. Key = the Russian source text (see Classes/App/MALocalization.h). */
+
+"История" = "History";
+"Ошибка" = "Error";
+"Готово" = "Done";
+"Изображение сохранено в галерею." = "Image saved to your photo library.";
+"Провайдер" = "Provider";
+"Новый чат" = "New chat";
+"Голос" = "Voice";
+"Сообщение…" = "Message…";
+"Убрать фото" = "Remove photo";
+"Нет провайдера" = "No provider";
+"Выбери провайдера кнопкой сверху или в Settings." = "Choose a provider with the button at the top or in Settings.";
+"Сгенерировать фото" = "Generate image";
+"Сделать фото" = "Take photo";
+"Прикрепить фото из галереи" = "Attach photo from library";
+"Отмена" = "Cancel";
+"Пустой запрос" = "Empty prompt";
+"Сначала напиши в поле ввода, что за фото нужно." = "First type in the input field what image you want.";
+"Нет провайдера изображений" = "No image provider";
+"Настрой OpenAI (DALL·E), OpenRouter или Custom в Settings → Изображения." = "Set up OpenAI (DALL·E), OpenRouter or Custom in Settings → Images.";
+"Не удалось сгенерировать изображение" = "Couldn't generate the image";
+"Привет! Я \"%@\"\nНапиши сообщение." = "Hi! I'm \"%@\"\nType a message.";
+"Привет!\nНапиши сообщение." = "Hi!\nType a message.";
+"Выбери провайдера" = "Choose a provider";
+"История чатов" = "Chat history";
+"Пока нет сохранённых бесед.\nНачни чат на вкладке «Chat» —\nон появится здесь автоматически." = "No saved conversations yet.\nStart a chat in the “Chat” tab —\nit will appear here automatically.";
+"📷 Фото" = "📷 Photo";
+"Нет сообщений" = "No messages";
+"Не указан API-ключ Claude" = "Claude API key is not set";
+"Некорректный URL сервера" = "Invalid server URL";
+"Сервер вернул некорректный ответ" = "The server returned an invalid response";
+"Не удалось разобрать ответ Claude" = "Couldn't parse Claude's response";
+"Неизвестная ошибка сервера" = "Unknown server error";
+"Не указан API-ключ" = "API key is not set";
+"Не удалось разобрать ответ сервера" = "Couldn't parse the server's response";
+"Не удалось декодировать изображение" = "Couldn't decode the image";
+"В ответе нет ни b64_json, ни url" = "The response contains neither b64_json nor url";
+"Некорректный URL изображения в ответе" = "Invalid image URL in the response";
+"Не удалось скачать изображение" = "Couldn't download the image";
+"Файл по ссылке — не изображение" = "The linked file is not an image";
+"Инструкция" = "Instructions";
+"Например: отвечай кратко и по-русски, обращайся на «ты», не извиняйся без причины." = "For example: keep answers short, be casual with me, and don't apologize without a reason.";
+"Очистить" = "Clear";
+"Укажите базовый URL своего сервера. Сервер должен отвечать в формате OpenAI (/chat/completions или /images/generations)." = "Enter the base URL of your server. The server must respond in the OpenAI format (/chat/completions or /images/generations).";
+"Модель" = "Model";
+"API-ключ" = "API key";
+"Активен" = "Active";
+"Сделать активным" = "Make active";
+"Стандартный" = "Default";
+"Мужской" = "Male";
+"Женский" = "Female";
+"Медленно" = "Slow";
+"Обычно" = "Normal";
+"Быстро" = "Fast";
+"Провайдеры чата" = "Chat providers";
+"Генерация изображений" = "Image generation";
+"Оформление" = "Appearance";
+"Язык интерфейса приложения. На язык ответов ИИ это не влияет — его можно задать в «Инструкции»." = "Interface language of the app. It doesn't affect the language of the AI's replies — you can set that in “Instructions”.";
+"Текст подмешивается к каждому запросу как системное сообщение, поэтому ИИ следует ему во всех чатах (в ленте оно не показывается). Чем длиннее инструкция, тем больше токенов уходит на каждое сообщение." = "The text is added to every request as a system message, so the AI follows it in all chats (it isn't shown in the conversation). The longer the instructions, the more tokens each message uses.";
+"Фон вкладки «Chat». Пузыри сообщений остаются поверх него." = "Background of the “Chat” tab. Message bubbles stay on top of it.";
+"Отметка галочкой — провайдер, который используется прямо сейчас. Тапни, чтобы задать ключ/URL/модель." = "The checkmark shows the provider in use right now. Tap to set the key/URL/model.";
+"Ключ не задан" = "Key not set";
+"URL не задан" = "URL not set";
+"Настроено" = "Configured";
+"Использовать инструкцию" = "Use instructions";
+"Текст инструкции" = "Instructions text";
+"Не задана" = "Not set";
+"Озвучивать все ответы" = "Read all replies aloud";
+"Скорость речи" = "Speech rate";
+"Проверить озвучку" = "Test speech";
+"Встроенный синтезатор VoxSynth" = "Built-in VoxSynth synthesizer";
+"Обои чата" = "Chat wallpaper";
+"Своя картинка" = "Custom image";
+"Стандартный фон" = "Default background";
+"Выбрать фото из галереи" = "Choose from library";
+"Сбросить на стандартный фон" = "Reset to default background";
+"Распознавание речи (STT)" = "Speech recognition (STT)";
+"Синтез речи не удался (код %d)" = "Speech synthesis failed (code %d)";
+"Не удалось воспроизвести звук: %@" = "Couldn't play the audio: %@";
+"неизвестная ошибка" = "unknown error";
+"Задай ключ распознавания речи в Settings → Голос" = "Set the speech recognition key in Settings → Voice";
+"Не удалось начать запись (проверь доступ к микрофону)" = "Couldn't start recording (check microphone access)";
+"Запись не идёт" = "Not recording";
+"Слишком короткая запись — удерживай дольше" = "The recording is too short — hold it longer";
+"Некорректный URL распознавания речи" = "Invalid speech recognition URL";
+"Распознавание: %@" = "Recognition: %@";
+"Речь не распознана — попробуй ещё раз" = "Speech not recognized — try again";
+
+/* Settings: категории и экраны */
+"ИИ" = "AI";
+"Приложение" = "App";
+"Чат" = "Chat";
+"Изображения" = "Images";
+"Вкл" = "On";
+"Выкл" = "Off";
+"Не выбран" = "Not selected";
+"Озвучка ответов" = "Spoken replies";
+"Микрофон" = "Microphone";
+"Ответы озвучивает встроенный синтезатор VoxSynth: русская речь, цифры читаются словами, латиница — транслитом. Работает без сервера, ключей и интернета; голос заметно роботизированный." = "Replies are read aloud by the built-in VoxSynth synthesizer: Russian speech, digits are read as words, Latin text is transliterated. Works without a server, keys or internet; the voice sounds noticeably robotic.";
+"Сервер нужен только микрофону в чате: он отправляет запись на распознавание (Whisper). Если ключ пустой, а URL — api.openai.com, берётся ключ чата OpenAI. Бесплатный вариант — Groq: https://api.groq.com/openai/v1, модель whisper-large-v3." = "A server is only needed for the microphone in the chat: it sends the recording for recognition (Whisper). If the key is empty and the URL is api.openai.com, the OpenAI chat key is used. A free option is Groq: https://api.groq.com/openai/v1, model whisper-large-v3.";
+
+/* Settings → Оформление: тема */
+"Тема" = "Theme";
+"Обои" = "Wallpaper";
+"Тёмная тема" = "Dark theme";
+"Тёмная" = "Dark";
+"Светлая" = "Light";
+"Тёмное оформление всего приложения. Обои чата остаются как есть." = "Dark appearance for the whole app. Chat wallpaper stays as it is.";
+
+/* OpenRouter: генерация изображений */
+"Нужна модель с генерацией изображений, например google/gemini-2.5-flash-image или openai/gpt-image-2. Полный список: openrouter.ai/models?output_modalities=image" = "Use a model with image output, e.g. google/gemini-2.5-flash-image or openai/gpt-image-2. Full list: openrouter.ai/models?output_modalities=image";
+
+/* Распознавание речи на устройстве */
+"Распознавание" = "Recognition";
+"Сервер (Whisper)" = "Server (Whisper)";
+"На устройстве" = "On device";
+"Модель на устройстве" = "On-device model";
+"Установлена" = "Installed";
+"Не установлена" = "Not installed";
+"Распознавание на устройстве работает без сети. Это экспериментальный режим: движок пока в разработке, файл модели нужно положить в Documents/stt/model.bin." = "On-device recognition works without a network. This is an experimental mode: the engine is still in development, and the model file must be placed at Documents/stt/model.bin.";
+"Модель распознавания не установлена — см. Settings → Голос" = "The recognition model is not installed — see Settings → Voice";
+"Модель распознавания не установлена" = "The recognition model is not installed";
+"Файл модели распознавания повреждён" = "The recognition model file is damaged";
+"Движок распознавания на устройстве пока в разработке" = "The on-device recognition engine is still in development";
+"Не хватило памяти для распознавания" = "Not enough memory for recognition";
+"Распознавание отменено" = "Recognition cancelled";
+"Не удалось прочитать запись" = "Couldn't read the recording";
+
+/* Настройки: автор */
+"Автор" = "Author";

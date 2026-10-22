@@ -24,6 +24,8 @@
 "Привет!\nНапиши сообщение." = "Hi!\nType a message.";
 "Выбери провайдера" = "Choose a provider";
 "История чатов" = "Chat history";
+"Поиск по истории" = "Search history";
+"Ничего не найдено" = "No results found";
 "Пока нет сохранённых бесед.\nНачни чат на вкладке «Chat» —\nон появится здесь автоматически." = "No saved conversations yet.\nStart a chat in the “Chat” tab —\nit will appear here automatically.";
 "📷 Фото" = "📷 Photo";
 "Нет сообщений" = "No messages";
@@ -129,3 +131,47 @@
 
 /* Настройки: автор */
 "Автор" = "Author";
+
+/* Локальные нейросети (Local LLM) */
+"Укажите адрес сервера в вашей Wi-Fi сети, например http://192.168.0.5:11434/v1. Ollama: запускайте с OLLAMA_HOST=0.0.0.0. LM Studio: включите «Serve on Local Network». Ключ нужен, только если сервер защищён." = "Enter the address of the server on your Wi-Fi network, e.g. http://192.168.0.5:11434/v1. Ollama: start it with OLLAMA_HOST=0.0.0.0. LM Studio: turn on “Serve on Local Network”. A key is only needed if the server is protected.";
+"API-ключ (необязательно)" = "API key (optional)";
+"Выбрать пресет сервера" = "Choose server preset";
+"Пресет сервера" = "Server preset";
+"Проверить подключение и выбрать модель" = "Test connection & choose model";
+"Подключение…" = "Connecting…";
+"Модели" = "Models";
+"Сначала укажите адрес сервера." = "Enter the server address first.";
+"Модели не найдены" = "No models found";
+"Сервер отвечает, но список моделей пуст. Загрузите модель на сервере (например, ollama pull) и повторите." = "The server responds, but its model list is empty. Download a model on the server (e.g. ollama pull) and try again.";
+"Не удалось подключиться к серверу. Проверьте: сервер запущен, iPhone и ПК в одной Wi-Fi сети, адрес указан как http://IP:порт/v1, брандмауэр пропускает порт." = "Couldn't connect to the server. Check that it is running, the iPhone and PC are on the same Wi-Fi network, the address looks like http://IP:port/v1, and the firewall allows the port.";
+"Сервер слишком долго отвечает. Возможно, модель ещё загружается или она слишком тяжёлая для этого ПК. Попробуйте ещё раз." = "The server is taking too long to respond. The model may still be loading, or it may be too heavy for this PC. Try again.";
+
+/* Приватность / режим инкогнито */
+"Приватность" = "Privacy";
+"Режим инкогнито" = "Incognito mode";
+"Режим инкогнито: беседа не сохраняется" = "Incognito mode: this chat isn't saved";
+"В режиме инкогнито новые беседы не сохраняются в историю. Уже сохранённые беседы остаются на месте. Запросы по-прежнему отправляются выбранному провайдеру." = "In incognito mode, new chats aren't saved to history. Chats that are already saved stay where they are. Requests are still sent to the selected provider.";
+
+/* Блокировка PIN-кодом */
+"Блокировка PIN-кодом" = "PIN lock";
+"Сменить PIN-код" = "Change PIN";
+"Запрашивать PIN-код" = "Require PIN";
+"Сразу" = "Immediately";
+"Через 1 минуту" = "After 1 minute";
+"Через 5 минут" = "After 5 minutes";
+"Через 15 минут" = "After 15 minutes";
+"Введите PIN-код" = "Enter PIN";
+"Введите текущий PIN-код" = "Enter current PIN";
+"Придумайте PIN-код" = "Create a PIN";
+"Введите новый PIN-код" = "Enter a new PIN";
+"Повторите PIN-код" = "Repeat the PIN";
+"Удалить" = "Delete";
+"Неверный PIN-код" = "Wrong PIN";
+"PIN-коды не совпали. Попробуйте ещё раз." = "PINs don't match. Try again.";
+"Слишком много попыток. Повторите через %@" = "Too many attempts. Try again in %@";
+"PIN-код закрывает вход в приложение и защищает ключ шифрования. Короткий PIN можно подобрать, а если вы его забудете, восстановить данные не получится: придётся переустановить приложение." = "The PIN locks access to the app and protects the encryption key. A short PIN can be guessed, and if you forget it your data can't be recovered: you'll have to reinstall the app.";
+
+/* Шифрование */
+"Шифрование данных" = "Data encryption";
+"Недоступно" = "Unavailable";
+"История чатов и API-ключи шифруются алгоритмом AES-256." = "Chat history and API keys are encrypted with AES-256.";

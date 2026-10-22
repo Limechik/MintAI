@@ -1,0 +1,19 @@
+/home/lime/Документы/GitHub/MintAI-Legacy-iOS/.theos/obj/debug/armv7/Classes/Providers/MAHTTPClient.m.3371364f.o: \
+  Classes/Providers/MAHTTPClient.m /home/lime/theos/Prefix.pch \
+  /home/lime/theos/vendor/include/theos/BackwardsCompat.h \
+  /home/lime/theos/vendor/include/theos/IOSMacros.h \
+  /home/lime/theos/vendor/include/HBLog.h \
+  /home/lime/theos/vendor/include/CoreFoundation/CFLogUtilities.h \
+  Classes/Providers/MAHTTPClient.h
+
+/home/lime/theos/Prefix.pch:
+
+/home/lime/theos/vendor/include/theos/BackwardsCompat.h:
+
+/home/lime/theos/vendor/include/theos/IOSMacros.h:
+
+/home/lime/theos/vendor/include/HBLog.h:
+
+/home/lime/theos/vendor/include/CoreFoundation/CFLogUtilities.h:
+
+Classes/Providers/MAHTTPClient.h:

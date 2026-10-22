@@ -11,7 +11,7 @@
 + (instancetype)sharedRegistry;
 
 // Все провайдеры чата в порядке показа в UI:
-// DeepSeek, OpenAI, Claude, OpenRouter, Mistral, Gemini, OpenCode Zen, Custom.
+// DeepSeek, OpenAI, Claude, OpenRouter, Mistral, Gemini, OpenCode Zen, Local LLM, Custom.
 @property (nonatomic, strong, readonly) NSArray *providers;
 
 // Провайдер, выбранный сейчас для отправки сообщений в чате.

@@ -4,7 +4,7 @@
 
 - (instancetype)init {
 	self = [super initWithIdentifier:@"custom"
-	                      displayName:@"Custom / Local"
+	                      displayName:@"Custom"
 	                    baseURLString:@""
 	                            model:@""];
 	if (self) {

@@ -2,6 +2,9 @@
 #import "../Chat/MAChatViewController.h"
 #import "../Settings/MASettingsViewController.h"
 #import "../History/MAChatHistoryViewController.h"
+#import "../Lock/MAAppLock.h"
+#import "../Crypto/MAVault.h"
+#import "../Providers/MAKeychain.h"
 #import "MALocalization.h"
 #import "MATheme.h"
 
@@ -18,6 +21,53 @@
 
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.backgroundColor = theme.backgroundColor;
+
+	// Подпись вкладки «История» зависит от языка интерфейса.
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	                                          selector:@selector(languageDidChange:)
+	                                              name:MALanguageDidChangeNotification
+	                                            object:nil];
+
+	// Сменили тему — перекрашиваем бары (UIAppearance на уже созданные не действует).
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	                                          selector:@selector(themeDidChange:)
+	                                              name:MAThemeDidChangeNotification
+	                                            object:nil];
+
+	// Ключ шифрования истории и API-ключей. Без PIN он достаётся из Keychain сразу.
+	[[MAVault sharedVault] prepareAtLaunch];
+
+	if ([MAAppLock sharedLock].enabled && ![MAVault sharedVault].unlocked) {
+		// Ключ упакован PIN-кодом, поэтому историю и API-ключи пока не прочитать.
+		// Интерфейс (а с ним история, провайдеры и ключи) создаём только после
+		// ввода PIN; пока под экраном блокировки пустой фон.
+		UIViewController *placeholder = [[UIViewController alloc] init];
+		placeholder.view.backgroundColor = theme.backgroundColor;
+		self.window.rootViewController = placeholder;
+		[[NSNotificationCenter defaultCenter] addObserver:self
+		                                          selector:@selector(appLockDidUnlock:)
+		                                              name:MAAppLockDidUnlockNotification
+		                                            object:nil];
+	} else {
+		[self buildInterfaceIfNeeded];
+	}
+	[self.window makeKeyAndVisible];
+
+	// Если задан PIN-код — закрываем приложение экраном блокировки до ввода.
+	[[MAAppLock sharedLock] applicationDidFinishLaunching];
+
+	return YES;
+}
+
+// Создаёт вкладки приложения. Все синглтоны с данными (история, провайдеры,
+// ключи) оживают только здесь, то есть уже после открытия хранилища.
+- (void)buildInterfaceIfNeeded {
+	if (self.tabBarController) return;
+
+	MATheme *theme = [MATheme sharedTheme];
+
+	// Ключи, сохранённые старой версией открытым текстом, шифруем сразу.
+	[MAKeychain encryptLegacyItems];
 
 	// Вкладка 1: Чат
 	MAChatViewController *chatVC = [[MAChatViewController alloc] init];
@@ -47,28 +97,32 @@
 	[theme applyToTabBarController:self.tabBarController];
 
 	self.window.rootViewController = self.tabBarController;
-	[self.window makeKeyAndVisible];
+}
 
-	// Подпись вкладки «История» зависит от языка интерфейса.
-	historyNav.tabBarItem.title = MALocalizedString(@"История");
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                          selector:@selector(languageDidChange:)
-	                                              name:MALanguageDidChangeNotification
-	                                            object:nil];
+// Верный PIN на холодном запуске: хранилище открыто, можно строить интерфейс.
+- (void)appLockDidUnlock:(NSNotification *)notification {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MAAppLockDidUnlockNotification object:nil];
+	[self buildInterfaceIfNeeded];
+}
 
-	// Сменили тему — перекрашиваем бары (UIAppearance на уже созданные не действует).
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                          selector:@selector(themeDidChange:)
-	                                              name:MAThemeDidChangeNotification
-	                                            object:nil];
+#pragma mark - Блокировка PIN-кодом
 
-	return YES;
+- (void)applicationWillResignActive:(UIApplication *)application {
+	[[MAAppLock sharedLock] applicationWillResignActive];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+	[[MAAppLock sharedLock] applicationDidEnterBackground];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+	[[MAAppLock sharedLock] applicationDidBecomeActive];
 }
 
 - (void)themeDidChange:(NSNotification *)notification {
 	MATheme *theme = [MATheme sharedTheme];
 	self.window.backgroundColor = theme.backgroundColor;
-	[theme applyToTabBarController:self.tabBarController];
+	if (self.tabBarController) [theme applyToTabBarController:self.tabBarController];
 }
 
 - (void)languageDidChange:(NSNotification *)notification {
